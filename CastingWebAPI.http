@@ -1,4 +1,4 @@
-@CastingWebAPI_HostAddress = http://localhost:5044
+@CastingWebAPI_HostAddress = http://localhost:3000
 
 GET {{CastingWebAPI_HostAddress}}/weatherforecast/
 Accept: application/json

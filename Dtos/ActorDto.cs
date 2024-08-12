@@ -1,12 +1,10 @@
-﻿
-using CastingWebAPI.Structs;
-namespace CastingWebAPI.Models
+﻿using CastingWebAPI.Structs;
+
+namespace CastingWebAPI.Dtos
 {
-    public class Actor : User
+    public class ActorDto : UserDto
     {
         public bool hasPremium { get; set; } = false;
         public PersonalInfo? personalInfo { get; set; }
     }
-
-   
 }
