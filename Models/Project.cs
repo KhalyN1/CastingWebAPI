@@ -1,10 +1,13 @@
-﻿using System.Security.Cryptography;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Security.Cryptography;
 using System.Text;
-
+using MongoDB.Bson;
+using MongoDB.Driver;
 namespace CastingWebAPI.Models
 {
     public class Project
     {
+        [BsonId]
         public Guid Id { get; init; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -12,6 +15,7 @@ namespace CastingWebAPI.Models
      
         public Guid recruiterId { get; init; }
 
+        /*
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -22,6 +26,6 @@ namespace CastingWebAPI.Models
 
             string printContent = sb.ToString();
             return printContent;
-        }
+        }*/
     }
 }

@@ -44,12 +44,15 @@ namespace CastingWebAPI.Controllers
             if (project is null)
                 return BadRequest();
 
-            if (userRepository.GetUserByIdAsync(project.recruiterId) is null)
+            var recruiter = userRepository.GetRecruiterByIdAsync(project.recruiterId).Result;
+            if (recruiter is null)
                 return BadRequest("No recruiter to add project to");
 
             try
             {
                 await projectRepository.AddProjectAsync(project);
+                recruiter.Projects.Add(project);
+                await userRepository.UpdateUserAsync(project.recruiterId, recruiter);
             }
             catch (Exception ex) { 
                 return BadRequest(ex.Message);

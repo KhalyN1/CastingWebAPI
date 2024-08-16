@@ -28,8 +28,24 @@ namespace CastingWebAPI.Controllers
 
             return Ok(users);
         }
-       
-       
+
+        [HttpGet("recruiters")]
+        public async Task<ActionResult> GetRecruiters()
+        {
+            var recruiters = await userRepository.GetAllRecruitersAsync();
+
+            return Ok(recruiters);
+        }
+
+        [HttpGet("actors")]
+        public async Task<ActionResult> GetActors()
+        {
+            var actors = await userRepository.GetAllActorsAsync();
+
+            return Ok(actors);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
@@ -41,10 +57,32 @@ namespace CastingWebAPI.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}/projects")] 
+        [HttpGet("recruiters/{id}")]
+        public async Task<ActionResult<UserDto>> GetRecruiter(Guid id)
+        {
+            var recruiter = await userRepository.GetRecruiterByIdAsync(id);
+
+            if (recruiter is null)
+                return NotFound();
+
+            return Ok(recruiter);
+        }
+
+        [HttpGet("actors/{id}")]
+        public async Task<ActionResult> GetActor(Guid id)
+        {
+            var actor = await userRepository.GetActorByIdAsync(id);
+
+            if (actor is null)
+                return NotFound();
+
+            return Ok(actor);
+        }
+
+        [HttpGet("recruiters/{recruiterId}/projects")] 
          public async Task<ActionResult> GetProjectsByRecruiterId(Guid recruiterId)
         {
-            var user = await userRepository.GetUserByIdAsync(recruiterId);
+            var user = await userRepository.GetRecruiterByIdAsync(recruiterId);
 
             if (user is null)
                 return NotFound();
@@ -52,7 +90,7 @@ namespace CastingWebAPI.Controllers
             if (user is not Recruiter)
                 return BadRequest("This user is not a recruiter");
 
-            return Ok(((Recruiter) user).Projects);
+            return Ok(user.Projects);
         }
 
         [HttpPost]
@@ -82,7 +120,7 @@ namespace CastingWebAPI.Controllers
                         personalInfo = null
                     };
                 }
-                else
+                else if (form.userType == "Recruiter")
                 {
                     newUser = new Recruiter()
                     {
@@ -93,6 +131,7 @@ namespace CastingWebAPI.Controllers
                         birthDate = form.birthDate,
                     };
                 }
+                else return BadRequest("Incorrect user type");
 
                 try
                 {

@@ -11,6 +11,9 @@ namespace CastingWebAPI.Interfaces
 
         public Task<User> GetUserByIdAsync(Guid id);
 
+        public Task<Actor> GetActorByIdAsync(Guid id);
+        public Task<Recruiter> GetRecruiterByIdAsync(Guid id);
+
         public Task<User> AddUserAsync(User user);
 
         public Task<User> UpdateUserAsync(Guid id, User newUser);

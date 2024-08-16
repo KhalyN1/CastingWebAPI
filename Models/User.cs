@@ -1,8 +1,11 @@
-﻿namespace CastingWebAPI.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+namespace CastingWebAPI.Models
 {
     public abstract class User
     {
-   
+
+        [BsonId]
         public Guid Id { get; init; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }

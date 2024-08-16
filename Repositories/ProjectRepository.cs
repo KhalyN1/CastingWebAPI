@@ -1,47 +1,45 @@
 ﻿using CastingWebAPI.Interfaces;
 using CastingWebAPI.Models;
-
+using MongoDB.Driver;
+using static CastingWebAPI.Settings;
 namespace CastingWebAPI.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
-        private readonly List<Project> _projects;
-        public ProjectRepository() {
-            _projects = new List<Project>();
+       
+
+        private readonly IMongoCollection<Project> projectsCollection;
+        public ProjectRepository(IMongoClient client) {
+            IMongoDatabase db = client.GetDatabase(DATABASE_NAME);
+            projectsCollection = db.GetCollection<Project>(PROJECTS_COLLECTION);
         }
 
         public async Task<Project> AddProjectAsync(Project project)
         {
-           _projects.Add(project);
+           await projectsCollection.InsertOneAsync(project);
             return project;
         }
 
-        public async Task<Project> DeleteProjectByIdAsync(Guid id)
+        public async Task DeleteProjectByIdAsync(Guid id)
         {
-            Project project = GetByIdAsync(id).Result;
-
-            _projects.Remove(project);
-
-            return project;
-
+            await projectsCollection.FindOneAndDeleteAsync(project => project.Id == id);    
         }
 
         public async Task<IEnumerable<Project>> GetAllAsync()
         {
-            return _projects;
+            var projects = await projectsCollection.Find(x => true).ToListAsync();
+            return projects;
         }
 
         public async Task<Project> GetByIdAsync(Guid id)
         {
-            return _projects.Where(project => project.Id == id).FirstOrDefault();
+            var project = await projectsCollection.Find(project => project.Id == id).SingleOrDefaultAsync();
+            return project;
         }
 
         public async Task<Project> UpdateProjectAsync(Guid id, Project newProject)
         {
-            Project project = GetByIdAsync(id).Result;
-
-            project = newProject;
-
+            await projectsCollection.FindOneAndReplaceAsync(project => project.Id == id, newProject);
             return newProject;
         }
     }

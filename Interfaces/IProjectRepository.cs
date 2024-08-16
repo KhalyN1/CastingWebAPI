@@ -9,7 +9,7 @@ namespace CastingWebAPI.Interfaces
        // public Task<IEnumerable<Project>> GetByRecruiterIdAsync(Guid recruiterId);
         public Task<Project> AddProjectAsync(Project project);   
         public Task<Project> UpdateProjectAsync(Guid id, Project newProject);
-        public Task<Project> DeleteProjectByIdAsync(Guid id);
+        public Task DeleteProjectByIdAsync(Guid id);
 
     }
 }
