@@ -1,6 +1,9 @@
 ﻿using CastingWebAPI.Dtos;
+using CastingWebAPI.Enums;
+using CastingWebAPI.Extensions;
 using CastingWebAPI.Interfaces;
 using CastingWebAPI.Models;
+using CastingWebAPI.Structs;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -94,7 +97,7 @@ namespace CastingWebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> AddUser([FromBody] UserSignUpForm form)
+        public async Task<ActionResult<UserDto>> AddUser([FromBody] CreateUserDto form)
         {
             if (ModelState.IsValid) {
 
@@ -117,8 +120,9 @@ namespace CastingWebAPI.Controllers
                         PasswordHash = passwordService.HashPassword(form.Password, out byte[] salt),
                         salt = salt,
                         birthDate = form.birthDate,
-                        personalInfo = null
+                        personalInfo = new PersonalInfo() { }
                     };
+                  
                 }
                 else if (form.userType == "Recruiter")
                 {
@@ -142,7 +146,7 @@ namespace CastingWebAPI.Controllers
                     return BadRequest(ex.Message);
                 }
 
-                return Ok(newUser);
+                return Ok(newUser.AsDto());
 
             }
 
@@ -172,6 +176,32 @@ namespace CastingWebAPI.Controllers
             return Ok("Deleted user with id " + id);
             
         }
-        
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdatePersonalInfo(Guid id,
+                                                           [FromQuery] HairColor? hairColor,
+                                                           [FromQuery] EyeColor? eyeColor,
+                                                           [FromQuery] int? height)
+        {
+         
+            var user = await userRepository.GetActorByIdAsync(id);
+            if (user == null) return BadRequest("User does not exist");
+            if (user is not Actor) return BadRequest("This user is not an actor");
+
+            var actor = (Actor) user;
+
+            var info = actor.personalInfo;
+
+            info.HairColor = hairColor ?? info.HairColor;
+            info.EyeColor = eyeColor ?? info.EyeColor;
+            info.Height = height ?? info.Height;
+
+            actor.personalInfo = info;
+
+            await userRepository.UpdateUserAsync(id, actor);
+
+            return Ok(actor);
+
+        }
     }
 }

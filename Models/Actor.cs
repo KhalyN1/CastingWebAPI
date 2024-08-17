@@ -5,7 +5,7 @@ namespace CastingWebAPI.Models
     public class Actor : User
     {
         public bool hasPremium { get; set; } = false;
-        public PersonalInfo? personalInfo { get; set; }
+        public PersonalInfo personalInfo { get; set; }
     }
 
    

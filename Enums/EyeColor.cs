@@ -2,9 +2,9 @@
 {
     public enum EyeColor
     {
-        Caprui,
-        Negri,
-        Albastri,
-        Other
+        Caprui = 0,
+        Negri = 1,
+        Albastri = 2,
+        Other = 3
     }
 }

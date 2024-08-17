@@ -1,11 +1,15 @@
 ﻿using CastingWebAPI.Enums;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace CastingWebAPI.Structs
 {
-    public struct PersonalInfo
+    public class PersonalInfo
     {
-        public HairColor hairColor;
-        public EyeColor eyeColor;
-        public Tuple<int, int> height_range;
+        [BsonElement("HairColor")]
+        public HairColor? HairColor;
+        [BsonElement("EyeColor")]
+        public EyeColor? EyeColor;
+        [BsonElement("Height")]
+        public int? Height;
     }
 }
