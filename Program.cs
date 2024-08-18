@@ -3,6 +3,7 @@ using CastingWebAPI.Interfaces;
 using CastingWebAPI.Repositories;
 using CastingWebAPI.Services;
 using MongoDB.Driver;
+using CastingWebAPI.Models;
 using static CastingWebAPI.Settings;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,9 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
     return new MongoClient(CONNECTION_STRING);
 });
 //register repositories and services for dependency injection
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IUserRepository<Actor>, ActorRepository>();
+builder.Services.AddSingleton<IUserRepository<Recruiter>, RecruiterRepository>();
 builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
 

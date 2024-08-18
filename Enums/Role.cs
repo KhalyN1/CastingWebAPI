@@ -1,6 +1,6 @@
 ﻿namespace CastingWebAPI.Enums
 {
-    public enum Role
+    public enum RoleType
     {
         Protagonist,
         Antagonist,

@@ -1,6 +1,6 @@
-﻿namespace CastingWebAPI.Models
+﻿namespace CastingWebAPI.Dtos
 {
-    public class UserLoginForm
+    public class LoginDto
     {
         public string Username { get; set; }
         public string Password { get; set; }

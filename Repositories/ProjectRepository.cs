@@ -14,13 +14,13 @@ namespace CastingWebAPI.Repositories
             projectsCollection = db.GetCollection<Project>(PROJECTS_COLLECTION);
         }
 
-        public async Task<Project> AddProjectAsync(Project project)
+        public async Task<Project> AddOneAsync(Project project)
         {
            await projectsCollection.InsertOneAsync(project);
             return project;
         }
 
-        public async Task DeleteProjectByIdAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             await projectsCollection.FindOneAndDeleteAsync(project => project.Id == id);    
         }
@@ -31,13 +31,13 @@ namespace CastingWebAPI.Repositories
             return projects;
         }
 
-        public async Task<Project> GetByIdAsync(Guid id)
+        public async Task<Project> GetAsync(Guid id)
         {
             var project = await projectsCollection.Find(project => project.Id == id).SingleOrDefaultAsync();
             return project;
         }
 
-        public async Task<Project> UpdateProjectAsync(Guid id, Project newProject)
+        public async Task<Project> UpdateAsync(Guid id, Project newProject)
         {
             await projectsCollection.FindOneAndReplaceAsync(project => project.Id == id, newProject);
             return newProject;

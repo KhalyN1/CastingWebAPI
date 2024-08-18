@@ -12,9 +12,9 @@ namespace CastingWebAPI.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectRepository projectRepository;
-        private readonly IUserRepository userRepository;
+        private readonly IUserRepository<Recruiter> userRepository;
 
-        public ProjectController(IProjectRepository projectRepository, IUserRepository userRepository) {
+        public ProjectController(IProjectRepository projectRepository, IUserRepository<Recruiter> userRepository) {
             this.projectRepository = projectRepository;
             this.userRepository = userRepository;
         }
@@ -30,7 +30,7 @@ namespace CastingWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetProjectById(Guid id)
         {
-            var project = await projectRepository.GetByIdAsync(id);
+            var project = await projectRepository.GetAsync(id);
 
             if (project is null)
                 return NotFound();
@@ -44,15 +44,15 @@ namespace CastingWebAPI.Controllers
             if (project is null)
                 return BadRequest();
 
-            var recruiter = userRepository.GetRecruiterByIdAsync(project.recruiterId).Result;
+            var recruiter = userRepository.GetAsync(project.recruiterId).Result;
             if (recruiter is null)
                 return BadRequest("No recruiter to add project to");
 
             try
             {
-                await projectRepository.AddProjectAsync(project);
+                await projectRepository.AddOneAsync(project);
                 recruiter.Projects.Add(project);
-                await userRepository.UpdateUserAsync(project.recruiterId, recruiter);
+                await userRepository.UpdateAsync(project.recruiterId, recruiter);
             }
             catch (Exception ex) { 
                 return BadRequest(ex.Message);
@@ -65,14 +65,14 @@ namespace CastingWebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ProjectDto>> DeleteProject(Guid id)
         {
-            var project = await projectRepository.GetByIdAsync(id);
+            var project = await projectRepository.GetAsync(id);
 
             if (project is null)
                 return NotFound();
 
             try
             {
-                await projectRepository.DeleteProjectByIdAsync(id);
+                await projectRepository.DeleteAsync(id);
 
             } catch (Exception ex) { 
                 return BadRequest(ex.Message); 

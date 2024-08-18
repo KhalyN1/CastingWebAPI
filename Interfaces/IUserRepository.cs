@@ -1,28 +1,13 @@
 ﻿using CastingWebAPI.Models;
 namespace CastingWebAPI.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository<T> : IMongoRepository<T> where T: User
     {
-        public Task<IEnumerable<User>> GetAllAsync();
-
-        public Task<IEnumerable<Actor>> GetAllActorsAsync();
-
-        public Task<IEnumerable<Recruiter>> GetAllRecruitersAsync();
-
-        public Task<User> GetUserByIdAsync(Guid id);
-
-        public Task<Actor> GetActorByIdAsync(Guid id);
-        public Task<Recruiter> GetRecruiterByIdAsync(Guid id);
-
-        public Task<User> AddUserAsync(User user);
-
-        public Task<User> UpdateUserAsync(Guid id, User newUser);
-
-        public Task DeleteUserByIdAsync(Guid id);
-
+      
         public Task<bool> ExistsByUsername(string username);
 
         public Task<bool> ExistsByEmail(string email);   
 
+        public Task<T> GetByUsernameOrEmail(string usernameOrEmail);
     }
 }
