@@ -22,6 +22,8 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
     return new MongoClient(CONNECTION_STRING);
 });
 //register repositories and services for dependency injection
+builder.Services.AddSingleton<IRoleService, RoleService>();
+builder.Services.AddSingleton<IRoleRepository, RoleRepository>();   
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IUserRepository<Actor>, ActorRepository>();
 builder.Services.AddSingleton<IUserRepository<Recruiter>, RecruiterRepository>();

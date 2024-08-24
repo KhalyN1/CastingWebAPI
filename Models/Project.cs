@@ -25,6 +25,8 @@ namespace CastingWebAPI.Models
          
         public Guid recruiterId { get; init; }
 
+        public List<Role> Roles { get; init; } = new List<Role>();
+
         /*
         public override string ToString()
         {

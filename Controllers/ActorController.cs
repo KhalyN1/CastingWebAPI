@@ -4,6 +4,7 @@ using CastingWebAPI.Models;
 using CastingWebAPI.Extensions;
 using CastingWebAPI.Enums;
 using CastingWebAPI.Structs;
+using Microsoft.AspNetCore.Mvc.Routing;
 namespace CastingWebAPI.Controllers
 {
     [Route("api/actors")]
@@ -71,6 +72,19 @@ namespace CastingWebAPI.Controllers
 
             return Ok(actor);
 
+        }
+
+        [HttpPut("{id}/{premium}")] 
+        public async Task<ActionResult> UpdatePremiumStatus(Guid id, [FromQuery] bool premium)
+        {
+            var actor = await actorRepository.GetAsync(id);
+            if (actor == null) return BadRequest("User does not exist");
+
+           actor.hasPremium = premium;
+
+            await actorRepository.UpdateAsync(id, actor);
+
+            return Ok(Json(actor.Id, actor.hasPremium));
         }
     }
 }
